@@ -1,0 +1,130 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Text Auto Typing App with Line Limit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .neon-bg {
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            background-size: 400% 400%;
+            animation: neon 10s ease infinite;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        @keyframes neon {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .transparent-bg {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+        .neon-text {
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 15px #00ff00, 0 0 20px #00ff00, 0 0 25px #00ff00, 0 0 30px #00ff00, 0 0 35px #00ff00;
+            animation: neon-text 1.5s infinite alternate;
+        }
+        @keyframes neon-text {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        .neon-input {
+            background-color: black;
+            color: #00ff00;
+            border: 2px solid;
+            border-image-slice: 1;
+            border-width: 2px;
+            border-image-source: linear-gradient(45deg, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000);
+            animation: neon-border 5s infinite;
+        }
+        @keyframes neon-border {
+            0% { border-image-source: linear-gradient(45deg, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000); }
+            50% { border-image-source: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #ff00ff); }
+            100% { border-image-source: linear-gradient(45deg, #ff00ff, #00ffff, #00ff00, #ffff00, #ff0000); }
+        }
+    </style>
+</head>
+<body class="neon-bg font-roboto">
+    <div class="container mx-auto p-4">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-bold neon-text">User Text Auto Typing App with Line Limit</h1>
+        </header>
+        <main>
+            <div class="transparent-bg p-6 rounded-lg shadow-lg mb-8">
+                <div class="mb-4">
+                    <label for="line-limit" class="block neon-text font-bold mb-2">Enter Line Limit:</label>
+                    <input type="number" id="line-limit" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 neon-input" placeholder="Enter line limit...">
+                </div>
+                <div class="mb-4">
+                    <label for="user-text" class="block neon-text font-bold mb-2">Type Your Text:</label>
+                    <textarea id="user-text" class="w-full h-48 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 neon-input" placeholder="Start typing your text..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="auto-text" class="block neon-text font-bold mb-2">Auto Typing Text:</label>
+                    <textarea id="auto-text" class="w-full h-48 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 neon-input" placeholder="Auto typing text will appear here..." readonly></textarea>
+                </div>
+                <button id="start-typing" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Start Typing</button>
+            </div>
+            <div class="transparent-bg p-6 rounded-lg shadow-lg mb-8 text-center neon-input">
+                <h2 class="text-2xl font-bold neon-text mb-4">About</h2>
+                <p class="neon-text mb-4">
+                    This application allows users to type their own text and set a line limit for auto-typing. The auto-typing feature will repeat the user's text up to the specified line limit, providing a dynamic and engaging experience.
+                </p>
+                <p class="neon-text mb-4">
+                    The background of the application features a vibrant neon gradient animation, creating a visually appealing interface. The text areas and buttons are styled with Tailwind CSS to ensure a modern and responsive design.
+                </p>
+                <p class="neon-text text-2xl font-bold">CODE BY CYBER DEXTER</p>
+            </div>
+            <div class="text-center">
+                <a href="https://wa.me/94785274495" target="_blank" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('start-typing').addEventListener('click', function() {
+            const lineLimit = document.getElementById('line-limit').value;
+            const userText = document.getElementById('user-text').value;
+            const autoText = document.getElementById('auto-text');
+            const lines = userText.split('\n');
+            let index = 0;
+
+            if (lineLimit > 0 && userText.length > 0) {
+                autoText.value = '';
+                const interval = setInterval(() => {
+                    if (index < lines.length * lineLimit) {
+                        autoText.value += lines[index % lines.length] + '\n';
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        copyToClipboard(autoText.value);
+                        alert('Text copied to clipboard!');
+                    }
+                }, 100);
+            } else {
+                alert('Please enter a valid line limit and type some text.');
+            }
+        });
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
