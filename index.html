@@ -72,6 +72,10 @@
                     <label for="auto-text" class="block neon-text font-bold mb-2">Auto Typing Text:</label>
                     <textarea id="auto-text" class="w-full h-48 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 neon-input" placeholder="Auto typing text will appear here..." readonly></textarea>
                 </div>
+                <div class="mb-4">
+                    <label for="whatsapp-number" class="block neon-text font-bold mb-2">Enter WhatsApp Number:</label>
+                    <input type="text" id="whatsapp-number" class="w-full p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 neon-input" placeholder="Enter WhatsApp number...">
+                </div>
                 <button id="start-typing" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Start Typing</button>
             </div>
             <div class="transparent-bg p-6 rounded-lg shadow-lg mb-8 text-center neon-input">
@@ -97,10 +101,11 @@
             const lineLimit = document.getElementById('line-limit').value;
             const userText = document.getElementById('user-text').value;
             const autoText = document.getElementById('auto-text');
+            const whatsappNumber = document.getElementById('whatsapp-number').value;
             const lines = userText.split('\n');
             let index = 0;
 
-            if (lineLimit > 0 && userText.length > 0) {
+            if (lineLimit > 0 && userText.length > 0 && whatsappNumber.length > 0) {
                 autoText.value = '';
                 const interval = setInterval(() => {
                     if (index < lines.length * lineLimit) {
@@ -110,10 +115,11 @@
                         clearInterval(interval);
                         copyToClipboard(autoText.value);
                         alert('Text copied to clipboard!');
+                        sendToWhatsApp(whatsappNumber, autoText.value);
                     }
                 }, 100);
             } else {
-                alert('Please enter a valid line limit and type some text.');
+                alert('Please enter a valid line limit, type some text, and enter a WhatsApp number.');
             }
         });
 
@@ -124,6 +130,11 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
+        }
+
+        function sendToWhatsApp(number, text) {
+            const url = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         }
     </script>
 </body>
